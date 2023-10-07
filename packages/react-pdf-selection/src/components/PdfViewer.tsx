@@ -23,7 +23,7 @@ export enum PDFOrientation {
     LANDSCAPE = "landscape",
 }
 
-export type PageDimension = { width: number; height: number; orientation: PDFOrientation };
+export type PageDimension = { width: number; height: number; orientation: PDFOrientation; rotate: number };
 export type PageDimensions = Map<number, PageDimension>;
 
 interface PdfViewerProps<D extends object> {
@@ -161,8 +161,9 @@ export class PdfViewer<D extends object> extends Component<PdfViewerProps<D>, Pd
         for (const page of pages) {
             const width = page.view[2];
             const height = page.view[3];
-            const orientation = Math.abs(page.rotate) === 90 || Math.abs(page.rotate) === 270 ? PDFOrientation.LANDSCAPE : PDFOrientation.PORTRAIT;
-            originalPageDimensions.set(page.pageNumber, { width, height, orientation });
+            const rotate = page.rotate;
+            const orientation = Math.abs(rotate) === 90 || Math.abs(rotate) === 270 ? PDFOrientation.LANDSCAPE : PDFOrientation.PORTRAIT;
+            originalPageDimensions.set(page.pageNumber, { width, height, orientation, rotate });
         }
 
         this.computeScaledPageDimensions(originalPageDimensions);
@@ -179,7 +180,7 @@ export class PdfViewer<D extends object> extends Component<PdfViewerProps<D>, Pd
         originalPageDimensions.forEach((dimension, pageNumber) => {
             const width = dimension.width * this.props.scale;
             const height = dimension.height * this.props.scale;
-            pageDimensions.set(pageNumber, { width, height, orientation: dimension.orientation });
+            pageDimensions.set(pageNumber, { width, height, orientation: dimension.orientation, rotate: dimension.rotate });
             if (pageNumber < originalPageDimensions.size)
                 pageYOffsets[pageNumber] = pageYOffsets[pageNumber - 1] + height + this.BORDER_WIDTH_OFFSET;
         });
