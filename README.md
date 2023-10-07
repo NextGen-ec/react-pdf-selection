@@ -92,11 +92,21 @@ top | number | yes
 right | number | yes
 bottom | number | yes
 
+<!-- export enum PDFOrientation {
+    PORTRAIT = "portrait",
+    LANDSCAPE = "landscape",
+} -->
+#### `PDFOrientation`
+Property | Type | Notes
+:---|:---|:---
+PORTRAIT | `"portrait"` | Portrait orientation.
+LANDSCAPE | `"landscape"` | Landscape orientation.
+
 #### `PageDimensionData`
 
 Property | Type | Notes
 :---|:---|:---
-pageDimensions | `Map<number, { width: number; height: number }>` | A map of page dimensions, where the keys are page numbers (1-based, as in the `Position` objects) and values are `{ width: number; height: number }` objects.
+pageDimensions | `Map<number, { width: number; height: number, orientation: PDFOrientation, rotate: number }>` | A map of page dimensions, where the keys are page numbers (1-based, as in the `Position` objects) and values are `{ width: number; height: number, orientation: PDFOrientation, rotate: number }` objects.
 pageYOffsets | `number[]` | An array of page height offsets, indicating at what height the top of the page is. Takes the gap between pages and the border / margin at the top of the document into account.
 
 ### Custom component specification
@@ -147,3 +157,8 @@ The library can be compiled by running `npm run build` (alternatively use `npm r
 Use `npm link` to link the `dist` folder to your `node_modules`, so changes are automatically updated.
 
 Feel free to submit a pull request!
+
+### Updates 
+
+### `0.6.22` _(2023-10-07)_
+- Update: Added `rotate` property to `PageDimensionData` to properly support rotated pdf pages.
